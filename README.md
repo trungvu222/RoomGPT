@@ -1,55 +1,163 @@
-# [RoomGPT](https://roomGPT.io) - redesign your room with AI
+# RoomGPT – AI Room Redesign Application
 
-This is the previous and open source version of RoomGPT.io (a paid SaaS product). It's the very first version of roomGPT without the auth, payments, or additional features and it's simple to clone, deploy, and play around with.
+> A full-stack AI-powered web application developed by **Vu Thanh Trung**.  
+> Upload a photo of your room and let AI reimagine it in any interior style — instantly.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/trungvu222/MyRoomGPT&env=REPLICATE_API_KEY&project-name=room-GPT&repo-name=roomGPT)
+---
 
-[![Room GPT](./public/screenshot.png)](https://roomGPT.io)
+## 📸 Demo
 
-## How it works
+| Original Room | AI-Generated Room |
+|:---:|:---:|
+| ![Original](./public/original-pic.jpg) | ![Generated](./public/generated-pic.png) |
 
-It uses an ML model called [ControlNet](https://github.com/lllyasviel/ControlNet) to generate variations of rooms. This application gives you the ability to upload a photo of any room, which will send it through this ML Model using a Next.js API route, and return your generated room. The ML Model is hosted on [Replicate](https://replicate.com) and [Bytescale](https://www.bytescale.com/) is used for image storage.
+---
 
-## Running Locally
+## ✨ Overview
 
-### Cloning the repository the local machine.
+**RoomGPT** is a personal project that allows users to upload a photo of their room, choose an interior style and room type, and receive an AI-generated redesigned version of the space — all within seconds.
 
-```bash
-git clone https://github.com/trungvu222/MyRoomGPT
+The application is powered by a ControlNet-based diffusion model via the Replicate API, enabling realistic room transformations while preserving the original room's structure and layout.
+
+---
+
+## 🚀 Key Features
+
+- 📤 **Image Upload** — Drag & drop or browse to upload a room photo (JPEG/PNG)
+- 🎨 **Style Selection** — Choose from a variety of interior themes (Modern, Minimalist, Vintage, Industrial, Tropical, Neoclassic, and more)
+- 🏠 **Room Type Selection** — Supports Living Room, Bedroom, Bathroom, Office, Gaming Room, and more
+- 🤖 **AI Image Generation** — Generates a redesigned room using a state-of-the-art AI model via Replicate API
+- ⏳ **Real-time Loading State** — Smooth loading experience while the AI processes the image
+- ❌ **Error Handling** — Graceful error messages for failed uploads or API issues
+- 🔍 **Before / After Comparison** — Side-by-side slider to compare the original and generated room
+- 💾 **Download Result** — Save the AI-generated image directly to your device
+- ☁️ **Cloud Deployment** — Deployed and hosted on Vercel for fast, global access
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | Next.js 13 (App Router) |
+| **Language** | TypeScript |
+| **UI Library** | React 18 |
+| **Styling** | Tailwind CSS |
+| **AI Model** | Replicate API (ControlNet – HED Boundary) |
+| **Image Upload** | Bytescale Upload Widget |
+| **Animation** | Framer Motion |
+| **Deployment** | Vercel |
+| **Rate Limiting** | Upstash Redis *(optional)* |
+
+---
+
+## 📁 Project Structure
+
+```
+RoomGPT/
+├── app/
+│   ├── page.tsx           # Landing page
+│   ├── layout.tsx         # Root layout
+│   ├── dream/
+│   │   └── page.tsx       # Main generate page (upload + result)
+│   └── generate/
+│       └── route.ts       # Server-side API route (Replicate integration)
+├── components/
+│   ├── Header.tsx
+│   ├── Footer.tsx
+│   ├── DropDown.tsx
+│   ├── CompareSlider.tsx
+│   ├── LoadingDots.tsx
+│   ├── ResizablePanel.tsx
+│   └── Toggle.tsx
+├── utils/
+│   ├── dropdownTypes.ts   # Room types & themes
+│   ├── redis.ts           # Rate limiter setup
+│   ├── appendNewToName.ts
+│   └── downloadPhoto.ts
+└── public/                # Static assets & demo images
 ```
 
-### Creating a account on Replicate to get an API key.
+---
 
-1. Go to [Replicate](https://replicate.com/) to make an account.
-2. Click on your profile picture in the top left corner, and click on "API Tokens".
-3. Here you can find your API token. Copy it.
+## ⚙️ How It Works
 
-### Storing the API keys in .env
+1. **User uploads** a photo of their room via the Bytescale upload widget
+2. The image is **uploaded to Bytescale CDN** and a URL is returned
+3. The frontend calls the **`/generate` API route** with the image URL, selected theme, and room type
+4. The server sends a **POST request to Replicate API**, starting an AI prediction job using the ControlNet model
+5. The server **polls the prediction status** every second until the job succeeds
+6. The **generated image URL** is returned and displayed alongside the original for comparison
+7. Users can **download** the result or **generate a new design**
 
-Create a file in root directory of project with env. And store your API key in it, as shown in the .example.env file.
+---
 
-If you'd also like to do rate limiting, create an account on UpStash, create a Redis database, and populate the two environment variables in `.env` as well. If you don't want to do rate limiting, you don't need to make any changes.
+## 🔐 Environment Variables
 
-### Installing the dependencies.
+Create a `.env` file at the root of the project (see `.example.env` for reference):
+
+```env
+# Required
+REPLICATE_API_KEY=your_replicate_api_key_here
+NEXT_PUBLIC_UPLOAD_API_KEY=your_bytescale_api_key_here
+
+# Optional – for rate limiting
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
+```
+
+| Variable | Description |
+|---|---|
+| `REPLICATE_API_KEY` | API key from [replicate.com](https://replicate.com) |
+| `NEXT_PUBLIC_UPLOAD_API_KEY` | API key from [bytescale.com](https://www.bytescale.com) |
+| `UPSTASH_REDIS_REST_URL` | *(Optional)* Redis URL for rate limiting |
+| `UPSTASH_REDIS_REST_TOKEN` | *(Optional)* Redis token for rate limiting |
+
+---
+
+## 🏃 Running Locally
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/trungvu222/RoomGPT.git
+cd RoomGPT
+
+# 2. Install dependencies
 npm install
-```
 
-### Running the application.
+# 3. Set up environment variables
+cp .example.env .env
+# Then fill in your API keys in .env
 
-Then, run the application in the command line and it will be available at `http://localhost:3000`.
-
-```bash
+# 4. Start the development server
 npm run dev
 ```
 
-## One-Click Deploy
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
+---
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/trungvu222/MyRoomGPT&env=REPLICATE_API_KEY&project-name=room-GPT&repo-name=roomGPT)
+## 📦 Deployment
 
-## License
+This project is deployed on **Vercel**. To deploy your own instance:
 
-This repo is MIT licensed.
+1. Push the code to your GitHub repository
+2. Import the project at [vercel.com/new](https://vercel.com/new)
+3. Add the required environment variables in the Vercel dashboard
+4. Deploy — Vercel handles the rest automatically
+
+---
+
+## 👤 Author
+
+**Vu Thanh Trung**  
+Full-stack Developer  
+
+- GitHub: [@trungvu222](https://github.com/trungvu222)
+
+---
+
+## 📄 License
+
+This project is **proprietary software** developed by Vu Thanh Trung.  
+All rights reserved. Not open source. Do not copy, distribute, or reuse without permission.
