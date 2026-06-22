@@ -92,33 +92,10 @@ RoomGPT/
 
 ---
 
-## 🔐 Environment Variables
-
-Create a `.env` file at the root of the project (see `.example.env` for reference):
-
-```env
-# Required
-REPLICATE_API_KEY=your_replicate_api_key_here
-NEXT_PUBLIC_UPLOAD_API_KEY=your_bytescale_api_key_here
-
-# Optional – for rate limiting
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
-```
-
-| Variable | Description |
-|---|---|
-| `REPLICATE_API_KEY` | API key from [replicate.com](https://replicate.com) |
-| `NEXT_PUBLIC_UPLOAD_API_KEY` | API key from [bytescale.com](https://www.bytescale.com) |
-| `UPSTASH_REDIS_REST_URL` | *(Optional)* Redis URL for rate limiting |
-| `UPSTASH_REDIS_REST_TOKEN` | *(Optional)* Redis token for rate limiting |
-
----
-
 ## 👤 Author
 
 **Vu Thanh Trung**  
-Full-stack Developer  
+Software Engineer  
 
 - GitHub: [@trungvu222](https://github.com/trungvu222)
 
