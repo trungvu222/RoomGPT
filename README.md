@@ -115,39 +115,6 @@ UPSTASH_REDIS_REST_TOKEN=
 
 ---
 
-## 🏃 Running Locally
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/trungvu222/RoomGPT.git
-cd RoomGPT
-
-# 2. Install dependencies
-npm install
-
-# 3. Set up environment variables
-cp .example.env .env
-# Then fill in your API keys in .env
-
-# 4. Start the development server
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## 📦 Deployment
-
-This project is deployed on **Vercel**. To deploy your own instance:
-
-1. Push the code to your GitHub repository
-2. Import the project at [vercel.com/new](https://vercel.com/new)
-3. Add the required environment variables in the Vercel dashboard
-4. Deploy — Vercel handles the rest automatically
-
----
-
 ## 👤 Author
 
 **Vu Thanh Trung**  
